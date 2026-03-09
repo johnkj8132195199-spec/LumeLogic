@@ -1,66 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>LumeLogic V15</title>
+    <meta charset="UTF-8">
+    <title>LumeLogic V17</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="mobile-web-app-capable" content="yes">
+    
+    <link rel="icon" type="image/png" href="icon.png">
+    <link rel="apple-touch-icon" href="icon.png">
+    <meta name="theme-color" content="#00ff88">
+
     <style>
-        :root { --brand: #00ff88; --danger: #ff4444; --card: #1c222d; }
-        body { font-family: sans-serif; background: #0b0e14; color: white; text-align: center; margin: 0; padding-bottom: 180px; user-select: none; }
-        .header { padding: 25px; background: var(--card); border-bottom: 2px solid var(--brand); }
+        :root { --brand: #00ff88; --danger: #ff4444; --bg: #0b0e14; --card: #1c222d; }
+        body { font-family: sans-serif; background: var(--bg); color: white; text-align: center; margin: 0; padding-bottom: 180px; user-select: none; }
+        .header { padding: 25px; background: var(--card); border-bottom: 2px solid var(--brand); box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
-        .room-card { background: var(--card); padding: 20px; border-radius: 20px; border: 1px solid #333; }
-        h3 { margin: 0 0 10px 0; font-size: 13px; color: #888; text-transform: uppercase; }
+        .card { background: var(--card); padding: 20px; border-radius: 20px; border: 1px solid #333; }
         .btn { background: var(--brand); color: #0b0e14; border: none; padding: 15px; border-radius: 12px; width: 100%; font-weight: bold; cursor: pointer; transition: 0.1s; }
         .btn:active { background: #00cc6e; transform: scale(0.92); }
-        .master-btn { background: var(--danger); color: white; width: 90%; padding: 20px; border-radius: 15px; font-weight: bold; border: none; margin: 10px auto; display: block; }
-        .master-btn:active { background: #cc0000; transform: scale(0.95); }
-        
-        /* FOOTER BRANDING */
+        .master { background: var(--danger); color: white; width: 90%; padding: 20px; border-radius: 15px; font-weight: bold; border: none; margin: 10px auto; display: block; }
         .footer { background: var(--card); padding: 20px 10px; position: fixed; bottom: 0; width: 100%; border-top: 1px solid #333; }
-        .brand-name { color: var(--brand); font-weight: bold; font-size: 18px; letter-spacing: 1px; }
-        .details { color: #888; font-size: 11px; margin-top: 5px; }
+        .brand { color: var(--brand); font-weight: bold; font-size: 18px; }
     </style>
 </head>
-<body onload="alert('LumeLogic System Secure')">
+<body>
 
     <div class="header">
         <h1>LUMELOGIC</h1>
-        <p style="font-size:10px; color:#888;">SMART HOME ECOSYSTEM</p>
+        <p style="font-size:10px; color:#888;">OFFLINE-SECURE SMART HOME</p>
     </div>
 
-    <div class="grid">
-        <div class="room-card"><h3>PARLOR</h3><button class="btn" onclick="gate('1')">SWITCH</button></div>
-        <div class="room-card"><h3>KITCHEN</h3><button class="btn" onclick="gate('2')">SWITCH</button></div>
-        <div class="room-card"><h3>ROOM 1</h3><button class="btn" onclick="gate('3')">SWITCH</button></div>
-        <div class="room-card"><h3>ROOM 2</h3><button class="btn" onclick="gate('4')">SWITCH</button></div>
-        <div class="room-card"><h3>ROOM 3</h3><button class="btn" onclick="gate('5')">SWITCH</button></div>
-        <div class="room-card"><h3>ROOM 4</h3><button class="btn" onclick="gate('6')">SWITCH</button></div>
-        <div class="room-card"><h3>GATE</h3><button class="btn" onclick="gate('7')">SWITCH</button></div>
-        <div class="room-card"><h3>FENCE</h3><button class="btn" onclick="gate('8')">SWITCH</button></div>
-    </div>
-
-    <button class="master-btn" onclick="gate('all')">ALL LIGHTS OFF</button>
+    <div class="grid" id="mainGrid"></div>
+    <button class="master" onclick="ask('all')">ALL LIGHTS OFF</button>
 
     <div class="footer">
-        <div class="brand-name">LUMELOGIC</div>
-        <div class="details">
-            ADVANCED SMART HOME INSTALLATION<br>
-            Engineer: Kingsley John | Support: 09019505327
+        <div class="brand">LUMELOGIC</div>
+        <div style="font-size: 10px; color: #888; margin-top: 5px;">
+            © 2026 KINGSLEY JOHN. ALL RIGHTS RESERVED.<br>
+            <b>Engineer:</b> Kingsley John | <b>Support:</b> 09019505327
         </div>
     </div>
 
     <script>
-        function gate(id) {
+        /* LEGAL NOTICE: This logic is the property of Kingsley John. 
+           Unauthorized use is prohibited.
+        */
+        const rooms = ["PARLOR", "KITCHEN", "ROOM 1", "ROOM 2", "ROOM 3", "ROOM 4", "GATE", "FENCE"];
+        const grid = document.getElementById('mainGrid');
+        rooms.forEach((name, i) => {
+            grid.innerHTML += `<div class="card"><h3>${name}</h3><button class="btn" onclick="ask('${i+1}')">SWITCH</button></div>`;
+        });
+
+        function ask(id) {
             let pin = prompt("LUMELOGIC SECURITY: ENTER PIN");
             if (pin === "1234") {
-                if(id === 'all') {
-                    for(let i=1; i<=8; i++) { fetch(`http://192.168.1.50/room${i}/off`); }
-                    alert("System Shutting Down");
-                } else {
-                    fetch(`http://192.168.1.50/toggle?room=${id}`);
-                }
-            } else if (pin !== null) { alert("ACCESS DENIED"); }
+                let url = (id === 'all') ? "http://192.168.1.50/all/off" : "http://192.168.1.50/toggle?room=" + id;
+                fetch(url).catch(() => console.log("Offline Command Sent"));
+            } else if (pin !== null) {
+                alert("ACCESS DENIED");
+            }
         }
     </script>
 </body>

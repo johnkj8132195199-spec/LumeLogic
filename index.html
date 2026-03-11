@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>LumeLogic V17</title>
+    <title>LumeLogic Pro V19</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="mobile-web-app-capable" content="yes">
     
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
-    <meta name="theme-color" content="#00ff88">
+    <meta name="theme-color" content="#0b0e14">
 
     <style>
         :root { --brand: #00ff88; --danger: #ff4444; --bg: #0b0e14; --card: #1c222d; }
@@ -27,7 +27,7 @@
 
     <div class="header">
         <h1>LUMELOGIC</h1>
-        <p style="font-size:10px; color:#888;">OFFLINE-SECURE SMART HOME</p>
+        <p style="font-size:10px; color:#888;">OFFLINE-READY PWA SYSTEM</p>
     </div>
 
     <div class="grid" id="mainGrid"></div>
@@ -37,14 +37,12 @@
         <div class="brand">LUMELOGIC</div>
         <div style="font-size: 10px; color: #888; margin-top: 5px;">
             © 2026 KINGSLEY JOHN. ALL RIGHTS RESERVED.<br>
-            <b>Engineer:</b> Kingsley John | <b>Support:</b> 09019505327
+            <b>Support:</b> 09019505327
         </div>
     </div>
 
     <script>
-        /* LEGAL NOTICE: This logic is the property of Kingsley John. 
-           Unauthorized use is prohibited.
-        */
+        // ROOM & PIN LOGIC
         const rooms = ["PARLOR", "KITCHEN", "ROOM 1", "ROOM 2", "ROOM 3", "ROOM 4", "GATE", "FENCE"];
         const grid = document.getElementById('mainGrid');
         rooms.forEach((name, i) => {
@@ -55,10 +53,19 @@
             let pin = prompt("LUMELOGIC SECURITY: ENTER PIN");
             if (pin === "1234") {
                 let url = (id === 'all') ? "http://192.168.1.50/all/off" : "http://192.168.1.50/toggle?room=" + id;
-                fetch(url).catch(() => console.log("Offline Command Sent"));
+                fetch(url).catch(() => console.log("Offline: Sending Request to ESP32..."));
             } else if (pin !== null) {
                 alert("ACCESS DENIED");
             }
+        }
+
+        // SERVICE WORKER REGISTRATION (The "Offline Brain" Activator)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('LumeLogic Offline Guard: Registered'))
+                .catch(err => console.log('Guard Error:', err));
+            });
         }
     </script>
 </body>

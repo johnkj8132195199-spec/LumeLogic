@@ -5,7 +5,7 @@
     <title>LumeLogic V17</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="mobile-web-app-capable" content="yes">
-    
+    <link rel="manifest" href="manifest.json">
     <link rel="icon" type="image/png" href="icon.png">
     <link rel="apple-touch-icon" href="icon.png">
     <meta name="theme-color" content="#00ff88">
@@ -45,6 +45,13 @@
         /* LEGAL NOTICE: This logic is the property of Kingsley John. 
            Unauthorized use is prohibited.
         */
+
+        if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.register('sw.js')
+                    .then(() => console.log("Service Worker Registered"))
+                    .catch(err => console.log("SW failed", err));
+        }
+
         const rooms = ["PARLOR", "KITCHEN", "ROOM 1", "ROOM 2", "ROOM 3", "ROOM 4", "GATE", "FENCE"];
         const grid = document.getElementById('mainGrid');
         rooms.forEach((name, i) => {
